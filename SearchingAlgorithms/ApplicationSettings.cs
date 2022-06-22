@@ -23,19 +23,22 @@ namespace SearchingAlgorithms
 
         private void CustomRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void DijkstraButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if(DijkstraButton.Checked)
+            if(CustomRadioButton.Checked)
             {
-                DFSButton.Checked = false;
-                BFSButton.Checked = false;
-                AStarButton.Checked = false;
-                DijkstraButton.Checked = true;
+                WidthTextBox.Enabled = true;
+                HeightTextbox.Enabled = true;
+                WidthTextBox.Text = "";
+                HeightTextbox.Text = "";
+            }
+            else
+            {
+                WidthTextBox.Text = "Width";
+                HeightTextbox.Text = "Height";
+                WidthTextBox.Enabled = false;
+                HeightTextbox.Enabled = false;
             }
         }
+
         private void DFSButton_CheckedChanged(object sender, EventArgs e)
         {
             if(DFSButton.Checked)
@@ -43,7 +46,6 @@ namespace SearchingAlgorithms
                 DFSButton.Checked = true;
                 BFSButton.Checked = false;
                 AStarButton.Checked = false;
-                DijkstraButton.Checked = false;
             }
         }
         private void BFSButton_CheckedChanged(object sender, EventArgs e)
@@ -53,7 +55,6 @@ namespace SearchingAlgorithms
                 DFSButton.Checked = false;
                 BFSButton.Checked = true;
                 AStarButton.Checked = false;
-                DijkstraButton.Checked = false;
             }
         }
         private void AStarButton_CheckedChanged(object sender, EventArgs e)
@@ -63,7 +64,6 @@ namespace SearchingAlgorithms
                 DFSButton.Checked = false;
                 BFSButton.Checked = false;
                 AStarButton.Checked = true;
-                DijkstraButton.Checked = false;
             }
         }
 
@@ -87,5 +87,9 @@ namespace SearchingAlgorithms
             }
         }
 
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }
