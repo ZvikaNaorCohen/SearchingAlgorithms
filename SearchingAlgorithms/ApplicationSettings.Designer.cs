@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace SearchingAlgorithms
 {
     partial class ApplicationSettings
@@ -36,7 +38,7 @@ namespace SearchingAlgorithms
             this.label2 = new System.Windows.Forms.Label();
             this.SecondSizeButton = new System.Windows.Forms.RadioButton();
             this.FirstSizeButton = new System.Windows.Forms.RadioButton();
-            this.HeightTextbox = new System.Windows.Forms.TextBox();
+            this.HeightTextBox = new System.Windows.Forms.TextBox();
             this.WidthTextBox = new System.Windows.Forms.TextBox();
             this.CustomRadioButton = new System.Windows.Forms.RadioButton();
             this.StartButton = new System.Windows.Forms.Button();
@@ -119,25 +121,27 @@ namespace SearchingAlgorithms
             this.FirstSizeButton.UseVisualStyleBackColor = true;
             this.FirstSizeButton.CheckedChanged += new System.EventHandler(this.FirstSizeButton_CheckedChanged);
             // 
-            // HeightTextbox
+            // HeightTextBox
             // 
-            this.HeightTextbox.Enabled = false;
-            this.HeightTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.HeightTextbox.Location = new System.Drawing.Point(221, 357);
-            this.HeightTextbox.Name = "HeightTextbox";
-            this.HeightTextbox.Size = new System.Drawing.Size(122, 35);
-            this.HeightTextbox.TabIndex = 9;
-            this.HeightTextbox.Text = "Height";
+            this.HeightTextBox.Enabled = false;
+            this.HeightTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.HeightTextBox.Location = new System.Drawing.Point(221, 357);
+            this.HeightTextBox.Name = "HeightTextBox";
+            this.HeightTextBox.Size = new System.Drawing.Size(122, 35);
+            this.HeightTextBox.TabIndex = 9;
+            this.HeightTextBox.Text = "Height";
+            this.HeightTextBox.KeyPress += new KeyPressEventHandler(HeightTextBox_KeyPress);
             // 
             // WidthTextBox
             // 
             this.WidthTextBox.Enabled = false;
             this.WidthTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.WidthTextBox.Location = new System.Drawing.Point(361, 355);
+            this.WidthTextBox.Location = new System.Drawing.Point(360, 357);
             this.WidthTextBox.Name = "WidthTextBox";
             this.WidthTextBox.Size = new System.Drawing.Size(122, 35);
             this.WidthTextBox.TabIndex = 10;
             this.WidthTextBox.Text = "Width";
+            this.WidthTextBox.KeyPress += new KeyPressEventHandler(WidthTextBox_KeyPress);
             // 
             // CustomRadioButton
             // 
@@ -159,6 +163,7 @@ namespace SearchingAlgorithms
             this.StartButton.TabIndex = 12;
             this.StartButton.Text = "START";
             this.StartButton.UseVisualStyleBackColor = true;
+            this.StartButton.Click += new System.EventHandler(this.StartButton_Clicked);
             // 
             // groupBox1
             // 
@@ -193,7 +198,7 @@ namespace SearchingAlgorithms
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.WidthTextBox);
-            this.Controls.Add(this.HeightTextbox);
+            this.Controls.Add(this.HeightTextBox);
             this.Controls.Add(this.label2);
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -218,7 +223,7 @@ namespace SearchingAlgorithms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RadioButton SecondSizeButton;
         private System.Windows.Forms.RadioButton FirstSizeButton;
-        private System.Windows.Forms.TextBox HeightTextbox;
+        private System.Windows.Forms.TextBox HeightTextBox;
         private System.Windows.Forms.TextBox WidthTextBox;
         private System.Windows.Forms.RadioButton CustomRadioButton;
         private System.Windows.Forms.Button StartButton;
