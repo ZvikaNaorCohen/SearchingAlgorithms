@@ -21,21 +21,35 @@ namespace SearchingAlgorithms
 
         }
 
+        private void HeightTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void WidthTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            HeightTextBox_KeyPress(sender, e);
+        }
+
         private void CustomRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             if(CustomRadioButton.Checked)
             {
                 WidthTextBox.Enabled = true;
-                HeightTextbox.Enabled = true;
+                HeightTextBox.Enabled = true;
                 WidthTextBox.Text = "";
-                HeightTextbox.Text = "";
+                HeightTextBox.Text = "";
             }
             else
             {
                 WidthTextBox.Text = "Width";
-                HeightTextbox.Text = "Height";
+                HeightTextBox.Text = "Height";
                 WidthTextBox.Enabled = false;
-                HeightTextbox.Enabled = false;
+                HeightTextBox.Enabled = false;
             }
         }
 
@@ -90,6 +104,71 @@ namespace SearchingAlgorithms
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void StartButton_Clicked(object sender, EventArgs e)
+        {
+            if((DFSButton.Checked || BFSButton.Checked || AStarButton.Checked)
+               && (FirstSizeButton.Checked || SecondSizeButton.Checked || CustomRadioButton.Checked))
+            {
+                AlgorithmTypes.eAlgorithmType algoType = getAlgorithmType();
+                getHeightAndWidth(out int height, out int width);
+                if(algoType != AlgorithmTypes.eAlgorithmType.NoChoice)
+                {
+                    Visualizer startVisualizer = new Visualizer(algoType, height, width);
+                    startVisualizer.ShowDialog();
+                }
+            }
+        }
+
+        private AlgorithmTypes.eAlgorithmType getAlgorithmType()
+        {
+            AlgorithmTypes.eAlgorithmType typeToReturn = AlgorithmTypes.eAlgorithmType.NoChoice;
+            if(DFSButton.Checked)
+            {
+                typeToReturn = AlgorithmTypes.eAlgorithmType.Dfs;
+            }
+            else if(BFSButton.Checked)
+            {
+                typeToReturn = AlgorithmTypes.eAlgorithmType.Bfs;
+            }
+            else if(AStarButton.Checked)
+            {
+                typeToReturn = AlgorithmTypes.eAlgorithmType.AStar;
+            }
+
+            return typeToReturn;
+        }
+
+        private void getHeightAndWidth(out int o_Height, out int o_Width)
+        {
+            if(FirstSizeButton.Checked)
+            {
+                o_Height = o_Width = 30;
+            }
+            else if(SecondSizeButton.Checked)
+            {
+                o_Height = o_Width = 50;
+            }
+            else if(CustomRadioButton.Checked && HeightTextBox.Text != "" && WidthTextBox.Text != "")
+            {
+                o_Height = int.Parse(HeightTextBox.Text);
+                o_Width = int.Parse(WidthTextBox.Text);
+                if(o_Height > 60)
+                {
+                    o_Height = 60;
+                }
+
+                if(o_Width > 60)
+                {
+                    o_Width = 60;
+                }
+            }
+            else
+            {
+                o_Height = 60;
+                o_Width = 60;
+            }
         }
     }
 }
