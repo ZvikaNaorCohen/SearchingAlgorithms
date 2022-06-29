@@ -12,6 +12,8 @@ namespace SearchingAlgorithms
         public int m_EndVertex { get; set; }
 
 
+
+
         public AdjacencyNode(int i_StartVertex, int i_EndVertex)
         {
             m_StartVertex = i_StartVertex;

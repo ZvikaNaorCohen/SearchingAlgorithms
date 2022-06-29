@@ -18,9 +18,7 @@ namespace SearchingAlgorithms
         private int m_BoardHeight = 0;
         private int m_BoardWidth = 0;
         private AlgorithmTypes.eAlgorithmType m_algorithmType = AlgorithmTypes.eAlgorithmType.NoChoice;
-        private bool m_FirstClick = false;
         private UpgradedPictureBox[,] m_VisualizerPictureBoxes;
-        private bool m_MouseIsDown = false, m_MouseIsUp = true;
         private Size m_ButtonSize = new Size(20, 20);
         
 
@@ -30,7 +28,18 @@ namespace SearchingAlgorithms
             m_BoardHeight = i_BoardHeight;
             m_BoardWidth = i_BoardWidth;
             m_algorithmType = i_AlgorithmType;
+            if(m_BoardHeight > 40 || m_BoardWidth > 40)
+            {
+                m_ButtonSize = new Size(15, 15);
+            }
+            else if(m_BoardHeight > 30 || m_BoardWidth > 30)
+            {
+                m_ButtonSize = new Size(18, 18);
+            }
+            
             InitializeComponent();
+            this.TopMost = true;
+            
         }
 
         private void VisualizerForm_Load(object sender, EventArgs e)
@@ -40,8 +49,8 @@ namespace SearchingAlgorithms
 
         private void resetBoard()
         {
-            Left = 80;
-            Top = 100;
+            Left = m_ButtonSize.Width * 10;
+            Top = m_ButtonSize.Height * 10;
             int newHeight = Top + m_BoardHeight * m_ButtonSize.Height;
             int newWidth = Left + m_BoardWidth * m_ButtonSize.Width;
             Size = new Size(newWidth, newHeight);
@@ -76,16 +85,13 @@ namespace SearchingAlgorithms
                    Controls.Add(m_VisualizerPictureBoxes[i, j]);
                    int copyOfI = i, copyOfJ = j;
                    m_VisualizerPictureBoxes[i, j].Click += (sender, e) => buttonClicked(copyOfI, copyOfJ);
-                   //m_VisualizerRectangles[i, j].MouseDown += (MouseDownEvent);
-                   //m_VisualizerRectangles[i, j].MouseUp += (MouseUpEvent);
-                   // m_VisualizerRectangles[i, j].MouseMove += (mouseEnterEvent);
                }
 
                top += m_ButtonSize.Height;
             }
 
             Button startButton = new Button();
-            startButton.Location = new Point(top + 30, left + 30);
+            startButton.Location = new Point(top, left);
             startButton.Text = "RUN FINDER";
             startButton.Size = new Size(70, 40);
             startButton.Click += (sender, e) => startButtonClicked();
@@ -101,69 +107,43 @@ namespace SearchingAlgorithms
         private void startButtonClicked()
         { 
             DirectedGraph boardGraph = DirectedGraph.GetBoardGraph(m_VisualizerPictureBoxes, m_BoardHeight, m_BoardWidth);
-            foreach(AdjacencyList list in boardGraph.m_StartOfVectorList)
+            runAlgorithm(boardGraph, m_algorithmType);
+            //foreach(AdjacencyList list in boardGraph.m_StartOfVectorList)
+            //{
+            //    foreach(AdjacencyNode node in list.m_AdjacencyNodes)
+            //    {
+            //        int row = node.m_StartVertex;
+            //        int col = node.m_EndVertex;
+            //        m_VisualizerPictureBoxes[row,col].BackColor = Color.Pink;
+            //    }
+            //}
+        }
+
+        private void runAlgorithm(DirectedGraph i_Graph, AlgorithmTypes.eAlgorithmType i_AlgorithmType)
+        {
+            switch(i_AlgorithmType)
             {
-                foreach(AdjacencyNode node in list.m_AdjacencyNodes)
-                {
-                    int row = node.m_StartVertex;
-                    int col = node.m_EndVertex;
-                    m_VisualizerPictureBoxes[row,col].BackColor = Color.Pink;
-                }
+                case AlgorithmTypes.eAlgorithmType.AStar:
+                    {
+                        i_Graph.RunAStar(m_VisualizerPictureBoxes);
+                        break;
+                    }
+                case AlgorithmTypes.eAlgorithmType.Bfs:
+                    {
+                        i_Graph.RunBFS(m_VisualizerPictureBoxes);
+                        break;
+                    }
+                case AlgorithmTypes.eAlgorithmType.Dfs:
+                    {
+                        i_Graph.RunDFS(m_VisualizerPictureBoxes);
+                        break;
+                    }
             }
         }
 
 
         private void buttonClicked(int i_Row, int i_Col)
         {
-
-            //UpgradedPictureBox buttonClicked = m_VisualizerRectangles[i_Row, i_Col];
-            //if(m_VisualizerRectangles[i_Row,i_Col].BackColor == buttonClicked.m_DefaultBackColor)
-            //{
-            //    m_VisualizerRectangles[i_Row, i_Col].BackColor = Color.Black;
-            //}
-            //else
-            //{
-            //    m_VisualizerRectangles[i_Row, i_Col].BackColor = buttonClicked.m_DefaultBackColor;
-            //}
         }
-
-        //private void MouseDownEvent(object sender, EventArgs e)
-        //{
-        //    m_MouseIsDown = true;
-        //    m_MouseIsUp = false;
-        //}
-
-        //private void MouseUpEvent(object sender, EventArgs e)
-        //{
-        //    m_MouseIsUp = true;
-        //    m_MouseIsDown = false;
-        //}
-
-        //private void mouseEnterEvent(object sender, EventArgs e)
-        //{
-        //    if(m_MouseIsDown)
-        //    {
-        //        UpgradedPictureBox pictureClicked = sender as UpgradedPictureBox;
-        //        int row = pictureClicked.m_PositionOnBoard.X;
-        //        int col = pictureClicked.m_PositionOnBoard.Y;
-        //        if(m_VisualizerRectangles[row, col].BackColor == pictureClicked.m_DefaultBackColor)
-        //        {
-        //            m_VisualizerRectangles[row, col].BackColor = Color.Black;
-        //        }
-        //        else
-        //        {
-        //            m_VisualizerRectangles[row, col].BackColor = pictureClicked.m_DefaultBackColor;
-        //        }
-        //    }
-        //}
-
-        //private void getButtonRowCol(out int o_Row, out int o_Col, int i_X, int i_Y)
-        //{
-        //    o_Row = (i_X - Top) / (i_X * m_ButtonSize.Width);
-        //    o_Col = (i_Y - Left) / (i_Y * m_ButtonSize.Width);
-
-        //    o_Row = i_X / m_ButtonSize.Width;
-        //    o_Col = i_Y / m_ButtonSize.Width;
-        //}
     }
 }

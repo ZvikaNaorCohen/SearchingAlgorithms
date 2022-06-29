@@ -106,7 +106,7 @@ namespace SearchingAlgorithms
             this.SecondSizeButton.Name = "SecondSizeButton";
             this.SecondSizeButton.Size = new System.Drawing.Size(144, 37);
             this.SecondSizeButton.TabIndex = 7;
-            this.SecondSizeButton.Text = "500X500";
+            this.SecondSizeButton.Text = "40X40";
             this.SecondSizeButton.UseVisualStyleBackColor = true;
             this.SecondSizeButton.CheckedChanged += new System.EventHandler(this.SecondSizeButton_CheckedChanged);
             // 
@@ -117,7 +117,7 @@ namespace SearchingAlgorithms
             this.FirstSizeButton.Name = "FirstSizeButton";
             this.FirstSizeButton.Size = new System.Drawing.Size(144, 41);
             this.FirstSizeButton.TabIndex = 6;
-            this.FirstSizeButton.Text = "300X300";
+            this.FirstSizeButton.Text = "30X30";
             this.FirstSizeButton.UseVisualStyleBackColor = true;
             this.FirstSizeButton.CheckedChanged += new System.EventHandler(this.FirstSizeButton_CheckedChanged);
             // 
@@ -130,7 +130,7 @@ namespace SearchingAlgorithms
             this.HeightTextBox.Size = new System.Drawing.Size(122, 35);
             this.HeightTextBox.TabIndex = 9;
             this.HeightTextBox.Text = "Height";
-            this.HeightTextBox.KeyPress += new KeyPressEventHandler(HeightTextBox_KeyPress);
+            this.HeightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HeightTextBox_KeyPress);
             // 
             // WidthTextBox
             // 
@@ -141,7 +141,7 @@ namespace SearchingAlgorithms
             this.WidthTextBox.Size = new System.Drawing.Size(122, 35);
             this.WidthTextBox.TabIndex = 10;
             this.WidthTextBox.Text = "Width";
-            this.WidthTextBox.KeyPress += new KeyPressEventHandler(WidthTextBox_KeyPress);
+            this.WidthTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.WidthTextBox_KeyPress);
             // 
             // CustomRadioButton
             // 
@@ -205,7 +205,7 @@ namespace SearchingAlgorithms
             this.MinimizeBox = false;
             this.Name = "ApplicationSettings";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Searching Algorithms Visualiser";
             this.Load += new System.EventHandler(this.ApplicationSettings_Load);
             this.groupBox1.ResumeLayout(false);

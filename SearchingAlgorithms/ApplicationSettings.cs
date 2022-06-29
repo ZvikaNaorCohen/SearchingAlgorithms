@@ -116,7 +116,8 @@ namespace SearchingAlgorithms
                 if(algoType != AlgorithmTypes.eAlgorithmType.NoChoice)
                 {
                     Visualizer startVisualizer = new Visualizer(algoType, height, width);
-                    startVisualizer.ShowDialog();
+
+                    startVisualizer.ShowDialog(this);
                 }
             }
         }
@@ -148,26 +149,26 @@ namespace SearchingAlgorithms
             }
             else if(SecondSizeButton.Checked)
             {
-                o_Height = o_Width = 50;
+                o_Height = o_Width = 40;
             }
             else if(CustomRadioButton.Checked && HeightTextBox.Text != "" && WidthTextBox.Text != "")
             {
                 o_Height = int.Parse(HeightTextBox.Text);
                 o_Width = int.Parse(WidthTextBox.Text);
-                if(o_Height > 60)
+                if(o_Height > 50)
                 {
-                    o_Height = 60;
+                    o_Height = 45;
                 }
 
-                if(o_Width > 60)
+                if(o_Width > 50)
                 {
-                    o_Width = 60;
+                    o_Width = 45;
                 }
             }
             else
             {
-                o_Height = 60;
-                o_Width = 60;
+                o_Height = 45;
+                o_Width = 45;
             }
         }
     }

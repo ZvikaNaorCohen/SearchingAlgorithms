@@ -1,4 +1,6 @@
 ﻿
+using System.Drawing;
+
 namespace SearchingAlgorithms
 {
     partial class Visualizer
@@ -37,6 +39,7 @@ namespace SearchingAlgorithms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "Visualizer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Visualizer";
             this.Load += new System.EventHandler(this.VisualizerForm_Load);
             this.ResumeLayout(false);

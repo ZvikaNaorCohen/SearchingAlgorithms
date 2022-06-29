@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
+using System.Threading;
+using Timer = System.Timers.Timer;
 
 namespace SearchingAlgorithms
 {
@@ -106,6 +109,58 @@ namespace SearchingAlgorithms
             }
 
             return counter;
+        }
+
+        public void RunAStar(UpgradedPictureBox[,] i_PictureBoxes)
+        {
+
+        }
+
+        public void RunBFS(UpgradedPictureBox[,] i_PictureBoxes)
+        {
+
+        }
+
+        public void RunDFS(UpgradedPictureBox[,] i_PictureBoxes)
+        {
+            int size = m_StartOfVectorList.Count;
+            foreach (AdjacencyList list in m_StartOfVectorList) // Reset all colors to white. Not sure this is necessary.
+            {
+                foreach(AdjacencyNode node in list.m_AdjacencyNodes)
+                {
+                    i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor = Color.White;
+                }
+            }
+
+            foreach(AdjacencyList list in m_StartOfVectorList)
+            {
+                if(list.m_AdjacencyNodes.Count > 0 && i_PictureBoxes[list.m_AdjacencyNodes[0].m_StartVertex, list.m_AdjacencyNodes[0].m_EndVertex]
+                       .BackColor == Color.White)
+                {
+                    Visit(list.m_AdjacencyNodes[0], i_PictureBoxes);
+                }
+            }
+        }
+
+        public void Visit(AdjacencyNode i_Vertex, UpgradedPictureBox[,] i_PictureBoxes)
+        {
+            i_PictureBoxes[i_Vertex.m_StartVertex, i_Vertex.m_EndVertex].BackColor = Color.Gray;
+
+            AdjacencyList vertexNeighbors = m_StartOfVectorList[i_Vertex.m_EndVertex];
+            foreach(AdjacencyNode node in vertexNeighbors.m_AdjacencyNodes)
+            {
+                if (i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor == Color.White)
+                {
+                    Visit(node, i_PictureBoxes);
+                }
+            }
+
+            //if (i_Vertex->getNextNode() != nullptr)
+            //{
+            //    Visit(i_Vertex->getNextNode());
+            //}
+
+            i_PictureBoxes[i_Vertex.m_StartVertex, i_Vertex.m_EndVertex].BackColor = Color.Black;
         }
     }
 }

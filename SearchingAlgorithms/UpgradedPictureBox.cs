@@ -11,7 +11,7 @@ namespace SearchingAlgorithms
     {
         public Point m_PositionOnBoard { get; set; }
         public Color m_DefaultBackColor = Color.AntiqueWhite;
-        public Color m_StartColor = Color.Aqua, m_EndColor = Color.Orange;
+        public Color m_StartColor = Color.Aqua, m_EndColor = Color.Orange, m_MarkingColor = Color.DeepPink;
 
         public Point m_XYPosition { get; set; }
 
@@ -27,7 +27,7 @@ namespace SearchingAlgorithms
             {
                 if (MouseButtons == MouseButtons.Left)
                 {
-                    BackColor = Color.Black;
+                    BackColor = m_MarkingColor;
 
                 }
                 else if (MouseButtons == MouseButtons.Right)
@@ -45,7 +45,7 @@ namespace SearchingAlgorithms
             {
                 if(MouseButtons == MouseButtons.Left)
                 {
-                    BackColor = Color.Black;
+                    BackColor = m_MarkingColor;
                 }
                 else if(MouseButtons == MouseButtons.Right)
                 {
