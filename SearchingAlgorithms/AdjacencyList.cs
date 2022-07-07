@@ -9,10 +9,16 @@ namespace SearchingAlgorithms
     {
 
         public List<AdjacencyNode> m_AdjacencyNodes = new List<AdjacencyNode>();
+        public int m_BoardX, m_BoardY;
 
         public AdjacencyList()
         {
             m_AdjacencyNodes.Capacity = 1000;
+        }
+
+        public int NumberOfElementsInAdjacencyList()
+        {
+            return m_AdjacencyNodes.Count;
         }
 
         public void AddNodeToEndOfList(AdjacencyNode i_NodeToAdd)

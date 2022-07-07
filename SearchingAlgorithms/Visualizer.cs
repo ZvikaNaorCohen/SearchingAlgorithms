@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows;
 
@@ -20,10 +21,14 @@ namespace SearchingAlgorithms
         private AlgorithmTypes.eAlgorithmType m_algorithmType = AlgorithmTypes.eAlgorithmType.NoChoice;
         private UpgradedPictureBox[,] m_VisualizerPictureBoxes;
         private Size m_ButtonSize = new Size(20, 20);
-        
+        private Point m_StartingPoint, m_EndingPoint;
 
+        public Visualizer()
+        {
+            InitializeComponent();
+        }
 
-        public Visualizer(AlgorithmTypes.eAlgorithmType i_AlgorithmType, int i_BoardHeight, int i_BoardWidth)
+        public Visualizer(AlgorithmTypes.eAlgorithmType i_AlgorithmType, int i_BoardHeight, int i_BoardWidth) : this()
         {
             m_BoardHeight = i_BoardHeight;
             m_BoardWidth = i_BoardWidth;
@@ -36,10 +41,9 @@ namespace SearchingAlgorithms
             {
                 m_ButtonSize = new Size(18, 18);
             }
-            
-            InitializeComponent();
-            this.TopMost = true;
-            
+
+            // this.TopMost = true;
+
         }
 
         private void VisualizerForm_Load(object sender, EventArgs e)
@@ -96,8 +100,10 @@ namespace SearchingAlgorithms
             startButton.Size = new Size(70, 40);
             startButton.Click += (sender, e) => startButtonClicked();
             Controls.Add(startButton);
-            m_VisualizerPictureBoxes[10,10].BackColor = m_VisualizerPictureBoxes[10, 10].m_StartColor;
-            m_VisualizerPictureBoxes[20, 20].BackColor = m_VisualizerPictureBoxes[20, 20].m_EndColor;
+            m_StartingPoint = new Point(5, 5);
+            m_EndingPoint = new Point(10, 10);
+            m_VisualizerPictureBoxes[5,5].BackColor = m_VisualizerPictureBoxes[5, 5].m_StartColor;
+            m_VisualizerPictureBoxes[10, 10].BackColor = m_VisualizerPictureBoxes[10, 10].m_EndColor;
 
             Height = top + 50 + startButton.Size.Height;
             Width = left + 20 + startButton.Size.Width;
@@ -106,8 +112,9 @@ namespace SearchingAlgorithms
 
         private void startButtonClicked()
         { 
-            DirectedGraph boardGraph = DirectedGraph.GetBoardGraph(m_VisualizerPictureBoxes, m_BoardHeight, m_BoardWidth);
+            DirectedGraph boardGraph = new DirectedGraph(m_VisualizerPictureBoxes, m_BoardHeight, m_BoardWidth);
             runAlgorithm(boardGraph, m_algorithmType);
+
             //foreach(AdjacencyList list in boardGraph.m_StartOfVectorList)
             //{
             //    foreach(AdjacencyNode node in list.m_AdjacencyNodes)
@@ -135,7 +142,7 @@ namespace SearchingAlgorithms
                     }
                 case AlgorithmTypes.eAlgorithmType.Dfs:
                     {
-                        i_Graph.RunDFS(m_VisualizerPictureBoxes);
+                        RunDFS(i_Graph, m_VisualizerPictureBoxes);
                         break;
                     }
             }
@@ -145,5 +152,72 @@ namespace SearchingAlgorithms
         private void buttonClicked(int i_Row, int i_Col)
         {
         }
+
+        private void RunDFS(DirectedGraph i_Graph, UpgradedPictureBox[,] i_PictureBoxes)
+        {
+            foreach(AdjacencyList list in i_Graph.m_GraphAdjacencyLists) // Reset all colors to white. Not sure this is necessary.
+            {
+                foreach(AdjacencyNode node in list.m_AdjacencyNodes)
+                {
+                    i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor = Color.White;
+                }
+            }
+
+            AdjacencyList startingPointList = i_Graph.m_GraphAdjacencyLists[m_StartingPoint.X, m_StartingPoint.Y];
+            newVisit(i_Graph, startingPointList, i_PictureBoxes);
+        }
+
+        private async void Visit(DirectedGraph i_Graph, AdjacencyNode i_Vertex, UpgradedPictureBox[,] i_PictureBoxes)
+        {
+            paintPictureBox(i_PictureBoxes, i_Vertex.m_StartVertex, i_Vertex.m_EndVertex, Color.Gray);
+            AdjacencyList vertexNeighbors = i_Graph.m_StartOfVectorList[i_Vertex.m_EndVertex];
+            for(int i = 0; i < vertexNeighbors.m_AdjacencyNodes.Count; i++)
+            {
+                if (i_PictureBoxes[vertexNeighbors.m_AdjacencyNodes[i].m_StartVertex, vertexNeighbors.m_AdjacencyNodes[i].m_EndVertex].BackColor == Color.White)
+                {
+                    Visit(i_Graph, vertexNeighbors.m_AdjacencyNodes[i], i_PictureBoxes);
+                }
+            }
+
+            //foreach (AdjacencyNode node in vertexNeighbors.m_AdjacencyNodes)
+            ///{
+            //    if (i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor == Color.White)
+            //    {
+            //        Visit(i_Graph, node, i_PictureBoxes);
+            //    }
+            //}
+            paintPictureBox(i_PictureBoxes, i_Vertex.m_StartVertex, i_Vertex.m_EndVertex, Color.Black);
+            Refresh();
+            // i_PictureBoxes[i_Vertex.m_StartVertex, i_Vertex.m_EndVertex].BackColor = Color.Black;
+        }
+
+        private async void newVisit(DirectedGraph i_Graph, AdjacencyList i_List, UpgradedPictureBox[,] i_PictureBoxes)
+        {
+            // await TaskEx.Delay(300);
+            paintPictureBox(i_PictureBoxes, i_List.m_BoardX, i_List.m_BoardY, Color.Gray);
+            await TaskEx.Delay(200);
+            for (int i = 0; i < i_List.m_AdjacencyNodes.Count; i++)
+            {
+                int neighborStartVertex = i_List.m_AdjacencyNodes[i].m_StartVertex;
+                int neighborEndVertex = i_List.m_AdjacencyNodes[i].m_EndVertex;
+                if (i_PictureBoxes[neighborStartVertex, neighborEndVertex].BackColor == Color.White)
+                {
+                    AdjacencyList listToVisit = i_Graph.m_GraphAdjacencyLists[neighborStartVertex, neighborEndVertex];
+                    newVisit(i_Graph, listToVisit, i_PictureBoxes);
+                }
+            }
+            
+            paintPictureBox(i_PictureBoxes, i_List.m_BoardX, i_List.m_BoardY, Color.Black);
+            await TaskEx.Delay(200);
+            // Refresh();
+        }
+
+        private async void paintPictureBox(UpgradedPictureBox[,] i_PictureBoxes, int i_Row, int i_Col, Color i_Color)
+        {
+            // await TaskEx.Delay(300);
+            i_PictureBoxes[i_Row, i_Col].BackColor = i_Color;
+            // this.Refresh();
+        }
+
     }
 }

@@ -145,11 +145,11 @@ namespace SearchingAlgorithms
         {
             if(FirstSizeButton.Checked)
             {
-                o_Height = o_Width = 30;
+                o_Height = o_Width = 20;
             }
             else if(SecondSizeButton.Checked)
             {
-                o_Height = o_Width = 40;
+                o_Height = o_Width = 20;
             }
             else if(CustomRadioButton.Checked && HeightTextBox.Text != "" && WidthTextBox.Text != "")
             {
