@@ -12,6 +12,7 @@ namespace SearchingAlgorithms
         public Point m_PositionOnBoard { get; set; }
         public Color m_DefaultBackColor = Color.AntiqueWhite;
         public Color m_StartColor = Color.Aqua, m_EndColor = Color.Orange, m_MarkingColor = Color.DeepPink;
+        public UpgradedPictureBox m_WhoCalledMe = null;
 
         public Point m_XYPosition { get; set; }
 
