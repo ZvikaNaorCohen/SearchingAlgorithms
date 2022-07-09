@@ -145,7 +145,7 @@ namespace SearchingAlgorithms
         {
             if(FirstSizeButton.Checked)
             {
-                o_Height = o_Width = 20;
+                o_Height = o_Width = 30;
             }
             else if(SecondSizeButton.Checked)
             {
