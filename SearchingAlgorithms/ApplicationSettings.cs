@@ -116,7 +116,6 @@ namespace SearchingAlgorithms
                 if(algoType != AlgorithmTypes.eAlgorithmType.NoChoice)
                 {
                     Visualizer startVisualizer = new Visualizer(algoType, height, width);
-
                     startVisualizer.ShowDialog(this);
                 }
             }
@@ -149,7 +148,7 @@ namespace SearchingAlgorithms
             }
             else if(SecondSizeButton.Checked)
             {
-                o_Height = o_Width = 20;
+                o_Height = o_Width = 40;
             }
             else if(CustomRadioButton.Checked && HeightTextBox.Text != "" && WidthTextBox.Text != "")
             {
