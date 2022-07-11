@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,6 +18,9 @@ namespace SearchingAlgorithms
         private Size m_ButtonSize = new Size(20, 20);
         private Point m_StartingPoint, m_EndingPoint;
         private bool m_ToEnd = false;
+        private int m_WaitTime;
+        
+
 
         public Visualizer()
         {
@@ -37,14 +41,12 @@ namespace SearchingAlgorithms
             {
                 m_ButtonSize = new Size(18, 18);
             }
-
-            // this.TopMost = true;
-
         }
 
         private void VisualizerForm_Load(object sender, EventArgs e)
         {
             resetBoard();
+            this.Location = new Point(50, 50);
         }
 
         private void resetBoard()
@@ -55,11 +57,13 @@ namespace SearchingAlgorithms
             int newWidth = Left + m_BoardWidth * m_ButtonSize.Width;
             Size = new Size(newWidth, newHeight);
             m_VisualizerPictureBoxes = new UpgradedPictureBox[m_BoardHeight, m_BoardWidth];
+            m_WaitTime = 30 - m_ButtonSize.Height;
             initBoard();
         }
 
         private void initBoard()
         {
+            string buttonText = "Run Finder";
             m_VisualizerPictureBoxes = new UpgradedPictureBox[m_BoardHeight, m_BoardWidth];
             int left = 0, top = (Top / 2 - m_BoardHeight);
             for(int i = 0; i < m_BoardHeight; i++)
@@ -75,13 +79,12 @@ namespace SearchingAlgorithms
                                                              Location = new Point(left, top),
                                                              BorderStyle = BorderStyle.FixedSingle
                                                          };
-                    m_VisualizerPictureBoxes[i, j].BackColor = m_VisualizerPictureBoxes[i, j].m_DefaultBackColor;
                     left += m_ButtonSize.Width;
                     m_VisualizerPictureBoxes[i, j].m_PositionOnBoard = new Point(i, j);
+                    m_VisualizerPictureBoxes[i, j].BackColor = Colors.DefaultColor;
                     int x = ((i + 1) * top) + left;
                     int y = ((j + 1) * left) + top;
-                    Point XYPoint = new Point(x, y);
-                    m_VisualizerPictureBoxes[i, j].m_XYPosition = XYPoint;
+                    m_VisualizerPictureBoxes[i, j].m_XYPosition = new Point(x, y);
                     Controls.Add(m_VisualizerPictureBoxes[i, j]);
                     int copyOfI = i, copyOfJ = j;
                     m_VisualizerPictureBoxes[i, j].Click += (sender, e) => buttonClicked(copyOfI, copyOfJ);
@@ -92,14 +95,16 @@ namespace SearchingAlgorithms
 
             Button startButton = new Button();
             startButton.Location = new Point(top, left);
-            startButton.Text = "RUN FINDER";
+            startButton.Text = buttonText;
             startButton.Size = new Size(70, 40);
             startButton.Click += (sender, e) => startButtonClicked();
             Controls.Add(startButton);
+
             m_StartingPoint = new Point(5, 5);
-            m_EndingPoint = new Point(10, 10);
-            m_VisualizerPictureBoxes[5, 5].BackColor = m_VisualizerPictureBoxes[5, 5].m_StartColor;
-            m_VisualizerPictureBoxes[10, 10].BackColor = m_VisualizerPictureBoxes[10, 10].m_EndColor;
+            m_EndingPoint = new Point(m_BoardHeight - 3, m_BoardWidth - 3);
+
+            m_VisualizerPictureBoxes[5, 5].BackColor = Colors.StartPointColor;
+            m_VisualizerPictureBoxes[m_BoardHeight - 3, m_BoardWidth - 3].BackColor = Colors.EndPointColor;
 
             Height = top + 50 + startButton.Size.Height;
             Width = left + 20 + startButton.Size.Width;
@@ -141,13 +146,11 @@ namespace SearchingAlgorithms
 
         private void runDFS(DirectedGraph i_Graph, UpgradedPictureBox[,] i_PictureBoxes)
         {
-            Color defaultColor = i_PictureBoxes[0, 0].m_DefaultBackColor;
-            foreach(AdjacencyList list in
-                    i_Graph.m_GraphAdjacencyLists) // Reset all colors to white. Not sure this is necessary.
+            foreach(AdjacencyList list in i_Graph.m_GraphAdjacencyLists) // Reset all colors to white. Not sure this is necessary.
             {
                 foreach(AdjacencyNode node in list.m_AdjacencyNodes)
                 {
-                    if(i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor == defaultColor)
+                    if(i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor == Colors.DefaultColor)
                     {
                         i_PictureBoxes[node.m_StartVertex, node.m_EndVertex].BackColor = Color.White;
                     }
@@ -155,14 +158,12 @@ namespace SearchingAlgorithms
             }
 
             AdjacencyList startingPointList = i_Graph.m_GraphAdjacencyLists[m_StartingPoint.X, m_StartingPoint.Y];
-            newVisit(i_Graph, startingPointList, i_PictureBoxes);
+            visit(i_Graph, startingPointList, i_PictureBoxes);
         }
 
-        private async void newVisit(DirectedGraph i_Graph, AdjacencyList i_List, UpgradedPictureBox[,] i_PictureBoxes)
+        private void visit(DirectedGraph i_Graph, AdjacencyList i_List, UpgradedPictureBox[,] i_PictureBoxes)
         {
             paintPictureBox(i_PictureBoxes, i_List.m_BoardX, i_List.m_BoardY, Color.Gray);
-            await TaskEx.Delay(200);
-            Color endColor = i_PictureBoxes[0, 0].m_EndColor;
             for(int i = 0; i < i_List.m_AdjacencyNodes.Count; i++)
             {
                 int neighborStartVertex = i_List.m_AdjacencyNodes[i].m_StartVertex;
@@ -171,9 +172,9 @@ namespace SearchingAlgorithms
                 {
                     i_PictureBoxes[neighborStartVertex, neighborEndVertex].m_WhoCalledMe = i_PictureBoxes[i_List.m_BoardX, i_List.m_BoardY];
                     AdjacencyList listToVisit = i_Graph.m_GraphAdjacencyLists[neighborStartVertex, neighborEndVertex];
-                    newVisit(i_Graph, listToVisit, i_PictureBoxes);
+                    visit(i_Graph, listToVisit, i_PictureBoxes);
                 }
-                else if(i_PictureBoxes[neighborStartVertex, neighborEndVertex].BackColor == endColor && !m_ToEnd)
+                else if(i_PictureBoxes[neighborStartVertex, neighborEndVertex].BackColor == Colors.EndPointColor && !m_ToEnd)
                 {
                     i_PictureBoxes[neighborStartVertex, neighborEndVertex].m_WhoCalledMe = i_PictureBoxes[i_List.m_BoardX, i_List.m_BoardY];
                     showShortestPath(i_PictureBoxes, neighborStartVertex, neighborEndVertex);
@@ -184,8 +185,6 @@ namespace SearchingAlgorithms
             {
                 paintPictureBox(i_PictureBoxes, i_List.m_BoardX, i_List.m_BoardY, Color.Black);
             }
-
-            await TaskEx.Delay(200);
         }
 
         private void showShortestPath(UpgradedPictureBox[,] i_PictureBoxes, int i_StartVertex, int i_EndVertex)
@@ -193,7 +192,7 @@ namespace SearchingAlgorithms
             UpgradedPictureBox nextMark = i_PictureBoxes[i_StartVertex, i_EndVertex];
             while(nextMark != null)
             {
-                paintPictureBox(i_PictureBoxes, nextMark.m_PositionOnBoard.X, nextMark.m_PositionOnBoard.Y, Color.ForestGreen);
+                paintPictureBox(i_PictureBoxes, nextMark.m_PositionOnBoard.X, nextMark.m_PositionOnBoard.Y, Colors.PathColor);
                 nextMark = nextMark.m_WhoCalledMe;
             }
 
@@ -202,19 +201,19 @@ namespace SearchingAlgorithms
 
         private void paintPictureBox(UpgradedPictureBox[,] i_PictureBoxes, int i_Row, int i_Col, Color i_Color)
         {
-            if(!m_ToEnd)
+            Wait(m_WaitTime);
+            if (!m_ToEnd && i_PictureBoxes[i_Row, i_Col].BackColor != Colors.StartPointColor && i_PictureBoxes[i_Row, i_Col].BackColor != Colors.EndPointColor)
             {
                 i_PictureBoxes[i_Row, i_Col].BackColor = i_Color;
             }
         }
 
 
-        private async void runBFS(DirectedGraph i_Graph, UpgradedPictureBox[,] i_PictureBoxes)
+        private void runBFS(DirectedGraph i_Graph, UpgradedPictureBox[,] i_PictureBoxes)
         {
             Queue<AdjacencyList> verticesQueue = new Queue<AdjacencyList>();
             int[,] verticesArray = new int[m_BoardHeight, m_BoardWidth];
             AdjacencyList startVertex = i_Graph.m_GraphAdjacencyLists[m_StartingPoint.X, m_StartingPoint.Y];
-            Color endColor = i_PictureBoxes[0, 0].m_EndColor;
             foreach(AdjacencyList list in i_Graph.m_GraphAdjacencyLists)
             {
                 foreach(AdjacencyNode node in list.m_AdjacencyNodes)
@@ -230,7 +229,6 @@ namespace SearchingAlgorithms
             {
                 AdjacencyList outOfQueue = verticesQueue.Dequeue();
                 paintPictureBox(i_PictureBoxes, outOfQueue.m_BoardX, outOfQueue.m_BoardY, Color.Black);
-                await TaskEx.Delay(20);
                 for(int i = 0; i < outOfQueue.m_AdjacencyNodes.Count; i++)
                 {
                     int neighborStartVertex = outOfQueue.m_AdjacencyNodes[i].m_StartVertex;
@@ -238,7 +236,7 @@ namespace SearchingAlgorithms
 
                     if(verticesArray[neighborStartVertex, neighborEndVertex] == Int32.MaxValue)
                     {
-                        if(i_PictureBoxes[neighborStartVertex, neighborEndVertex].BackColor == endColor)
+                        if(i_PictureBoxes[neighborStartVertex, neighborEndVertex].BackColor == Colors.EndPointColor) 
                         {
                             i_PictureBoxes[neighborStartVertex, neighborEndVertex].m_WhoCalledMe = i_PictureBoxes[outOfQueue.m_BoardX, outOfQueue.m_BoardY];
                             showShortestPath(i_PictureBoxes, neighborStartVertex, neighborEndVertex);
@@ -254,5 +252,30 @@ namespace SearchingAlgorithms
                 }
             }
         }
+
+
+        public void Wait(int milliseconds)
+        {
+            var timer1 = new System.Windows.Forms.Timer();
+            if (milliseconds == 0 || milliseconds < 0) return;
+
+            // Console.WriteLine("start Wait timer");
+            timer1.Interval = milliseconds;
+            timer1.Enabled = true;
+            timer1.Start();
+
+            timer1.Tick += (s, e) =>
+                {
+                    timer1.Enabled = false;
+                    timer1.Stop();
+                    // Console.WriteLine("stop Wait timer");
+                };
+
+            while (timer1.Enabled && !m_ToEnd)
+            {
+                Application.DoEvents();
+            }
+        }
+
     }
 }
