@@ -154,12 +154,12 @@ namespace SearchingAlgorithms
             {
                 o_Height = int.Parse(HeightTextBox.Text);
                 o_Width = int.Parse(WidthTextBox.Text);
-                if(o_Height > 70)
+                if(o_Height > 60)
                 {
                     o_Height = 45;
                 }
 
-                if(o_Width > 70)
+                if(o_Width > 60)
                 {
                     o_Width = 45;
                 }

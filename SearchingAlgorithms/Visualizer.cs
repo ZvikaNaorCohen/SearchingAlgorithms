@@ -36,7 +36,7 @@ namespace SearchingAlgorithms
             m_algorithmType = i_AlgorithmType;
             if(m_BoardHeight > 40 || m_BoardWidth > 40)
             {
-                m_ButtonSize = new Size(15, 15);
+                m_ButtonSize = new Size(14, 14);
             }
             else if(m_BoardHeight > 30 || m_BoardWidth > 30)
             {
