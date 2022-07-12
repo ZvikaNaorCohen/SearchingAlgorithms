@@ -28,15 +28,26 @@ When we run the algorithm, the picturebox can be marked in three different color
 3. Black: We have finished visiting this vertex and his neighbors.
 
 
-We start the program and receive the main screen:
-![image](https://user-images.githubusercontent.com/57681792/178491939-d50a3108-2baf-4d2f-ad9b-70d1019d6ac1.png)
+We start the program and receive the main screen:  
+<img width="252" alt="mainscreen" src="https://user-images.githubusercontent.com/57681792/178498106-083ee8a6-8437-4965-b7dc-3bbe9b66c9fb.png">
+
 
 BFS and DFS algorithms are fully coded and functioning. More searching algorithms will be added.
 We need to decide the size of the map.
-After we choose the size we want, we receive the map:
-![image](https://user-images.githubusercontent.com/57681792/178492101-f1bb9fd4-e4fe-44a8-83d8-74928cd62fca.png)
+After we choose the size we want, we receive the map:  
+<img width="492" alt="algorithm screen" src="https://user-images.githubusercontent.com/57681792/178498300-4ad44f97-5920-4c4f-9c63-30a2a5c47280.png">
 
-Using the mouse, we are able to add / remove walls.
+Using the mouse, we are able to add / remove walls.  
+
+<img width="517" alt="algorithm screen" src="https://user-images.githubusercontent.com/57681792/178498533-f50e4ca2-9bb6-4e4c-8d4a-80afa9eea560.png">
+
 After pressing "Run Finder" button, we can see how the chosen searching algorithm behaves. 
-If the ending box is accessible, the algorithm would find it, and show the path is has passed in order to get to it.
+<img width="563" alt="algorithm screen" src="https://user-images.githubusercontent.com/57681792/178498672-1f84896a-0fdf-45c1-b8ef-b4f53342f2e1.png">
+
+If the ending box is accessible, the algorithm would find it, and show the path is has passed in order to get to it. 
+<img width="563" alt="algorithm screen" src="https://user-images.githubusercontent.com/57681792/178498776-0774fcc6-80a8-4c24-84d2-bdcf20620a24.png">
+
+
 If the ending box is not accessible, no path would be shown. 
+
+
