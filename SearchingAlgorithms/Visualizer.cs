@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.Remoting.Channels;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -63,7 +64,8 @@ namespace SearchingAlgorithms
 
         private void initBoard()
         {
-            string buttonText = "Run Finder";
+            string startButtonText = "Run Finder";
+            string randomMazeText = "Random Maze";
             m_VisualizerPictureBoxes = new UpgradedPictureBox[m_BoardHeight, m_BoardWidth];
             int left = 0, top = (Top / 2 - m_BoardHeight);
             for(int i = 0; i < m_BoardHeight; i++)
@@ -93,12 +95,14 @@ namespace SearchingAlgorithms
                 top += m_ButtonSize.Height;
             }
 
-            Button startButton = new Button();
-            startButton.Location = new Point(top, left);
-            startButton.Text = buttonText;
-            startButton.Size = new Size(70, 40);
+            Button startButton = getButton(top, left, startButtonText);
             startButton.Click += (sender, e) => startButtonClicked();
             Controls.Add(startButton);
+
+            Button randomMazeButton = getButton(top-50, left, randomMazeText);
+            randomMazeButton.Click += (sender, e) => randomMazeClicked();
+            Controls.Add(randomMazeButton);
+
 
             m_StartingPoint = new Point(5, 5);
             m_EndingPoint = new Point(m_BoardHeight - 3, m_BoardWidth - 3);
@@ -111,10 +115,24 @@ namespace SearchingAlgorithms
 
         }
 
+        private Button getButton(int top, int left, string buttonText)
+        {
+            Button button = new Button();
+            button.Location = new Point(left, top);
+            button.Text = buttonText;
+            button.Size = new Size(70, 40);
+            return button;
+        }
+
         private void startButtonClicked()
         {
             DirectedGraph boardGraph = new DirectedGraph(m_VisualizerPictureBoxes, m_BoardHeight, m_BoardWidth);
             runAlgorithm(boardGraph, m_algorithmType);
+        }
+
+        private void randomMazeClicked()
+        {
+
         }
 
         private void runAlgorithm(DirectedGraph i_Graph, AlgorithmTypes.eAlgorithmType i_AlgorithmType)

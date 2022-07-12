@@ -88,6 +88,7 @@ namespace SearchingAlgorithms
             this.AStarButton.TabIndex = 4;
             this.AStarButton.Text = "A*";
             this.AStarButton.UseVisualStyleBackColor = true;
+            this.AStarButton.Visible = false;
             this.AStarButton.CheckedChanged += new System.EventHandler(this.AStarButton_CheckedChanged);
             // 
             // label2
